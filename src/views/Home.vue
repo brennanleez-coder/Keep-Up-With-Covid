@@ -1,86 +1,75 @@
 <template>
   <main v-if="!loading">
-    <DataTitle :dataDate="dataDate" :text="title" />
 
-    <DataBoxes :stats="status" />
-
-    <CountrySelect :countries="countries" @get-country="getCountryData" />
-
+    <DataTitle :text="title"  :dataDate="dataDate" /> 
+    <DataBoxes :stats="stats"></DataBoxes>
+    <CountrySelect @get-country="getCountryData" :countries="countries "></CountrySelect>
     <button
-      v-if="status.Country"
-      class="bg-green-700 text-white rounded p-3 mt-10 focus:outline-none hover:bg-green-600"
-      @click="clearCountryData"
-    >
+    @click="clearCountryData"
+    v-if="stats.Country"
+    class="bg-green-700 text-white rounded p-3 mt-10 focus:outline-none hover:bg-green-600">
       Clear Country
     </button>
   </main>
-
-  <main v-else class="flex flex-col align-center justify-center text-center">
-    <div class="text-gray-500 text-3xl mt-10 mb-6">
+  <main class="flex flex-col align-center justify-center text-center" v-else>
+    <div class="text-grey-500 text-3xl mt-10 mb-6">
       Fetching Data
     </div>
-    <img :src="require('../assets/hourglass.gif')" alt="" class="w-24 m-auto" />
+    <img :src="loadingImage" class="w-24 m-auto"/>
   </main>
 </template>
 
 <script>
-import CountrySelect from '@/components/CountrySelect';
-import DataBoxes from '@/components/DataBoxes';
-import DataTitle from '@/components/DataTitle';
-import { ref } from 'vue';
+// @ is an alias to /src
+import Header from '@/components/Header.vue'
+import DataTitle from '@/components/DataTitle.vue'
+import DataBoxes from '@/components/DataBoxes.vue'
+import CountrySelect from '@/components/CountrySelect.vue'
 
 export default {
   name: 'Home',
   components: {
     DataTitle,
     DataBoxes,
-    CountrySelect
-  },
-  setup () {
-    const loading = ref(true);
-    const title = ref('Global');
-    const dataDate = ref('');
-    const status = ref({});
-    const countries = ref([]);
-
-    const fetchCovidData = async () => {
-      const res = await fetch('https://api.covid19api.com/summary');
-      return await res.json();
-    };
-
-    const getCountryData = (country) => {
-      status.value = country;
-      title.value = country.Country;
-    };
-
-    const clearCountryData = async () => {
-      loading.value = true;
-      const data = await fetchCovidData();
-      title.value = 'Global';
-      status.value = data.Global;
-      loading.value = false;
-    };
-
-    const baseSetup = async () => {
-      const data = await fetchCovidData();
-
-      dataDate.value = data.Date;
-      status.value = data.Global;
-      countries.value = data.Countries;
-      loading.value = false;
-    };
-
-    baseSetup();
-
+    CountrySelect,
+},
+  data() {
     return {
-      loading,
-      title,
-      dataDate,
-      status,
-      countries,
-      getCountryData,
-      clearCountryData
-    };
-  }
-};
+      loading: true,
+      title: 'Global',
+      dataDate: '',
+      stats: {},
+      countries: [],
+      loadingImage: require('../assets/hourglass.gif')
+    }
+  },
+  methods: {
+    async fetchCovidData() {
+      const res = await fetch('https://api.covid19api.com/summary')
+
+      const data = await res.json();
+      return data;
+    },
+    getCountryData(country) {
+      this.stats = country
+      this.title = country.Country
+
+    },
+    async clearCountryData() {
+      this.loading = true;
+      const data = await this.fetchCovidData()
+      this.title = "Global"
+      this.stats = data.Global
+      this.loading = false;
+    }
+  },
+  async created() {
+    const data = await this.fetchCovidData();
+    this.dataDate = data.Date
+    this.stats = data.Global
+    this.countries = data.Countries
+    this.loading = false
+    console.log(data)
+  },
+}
 </script>
