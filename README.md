@@ -1,8 +1,18 @@
-# vue-covid-tracker
 
-This project was built during the high of COVID-19.
-Using COVID-19 API, I made visualisations to allow anyone to view statistics of COVID-19.
+# Keep Up With Covid
+"Keep Up With Covid" is a web application that provides up-to-date statistics on the COVID-19 pandemic around the world. The app is built using Vue.js and Tailwind CSS on the front-end, and it uses the COVID-19 API to fetch and display the latest data.
 
+## Features
+
+- Global COVID-19 statistics: View the latest statistics on COVID-19 cases, deaths, and recoveries around the world.
+
+- Country-specific statistics: Select a specific country to view detailed statistics on COVID-19 cases, deaths, and recoveries in that country.
+
+- Visualizations: Display data visualizations such as charts and graphs to help users better understand the data.
+
+- Historical data: View historical data on COVID-19 cases, deaths, and recoveries over time.
+
+- News and updates: Provide the latest news and updates on the COVID-19 pandemic from trusted sources.
 ## Project setup
 ```
 npm install
@@ -18,5 +28,7 @@ npm run serve
 npm run build
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
